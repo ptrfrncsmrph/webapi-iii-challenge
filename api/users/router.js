@@ -1,7 +1,7 @@
 const express = require("express")
 
 const db = require("../../data/helpers/userDb")
-const postsDb = require("../../data/helpers/postDb")
+const postDb = require("../../data/helpers/postDb")
 
 const router = express.Router()
 
@@ -75,7 +75,7 @@ const map = fn => xs => xs.map(x => fn(x))
 router.delete("/:id", async (req, res) => {
   const { id: user_id } = req.params
   try {
-    const user = await db.getById(id)
+    const user = await db.getById(user_id)
     user == null
       ? res.status(404).json({
           message: `There is no user with id ${user_id}.`
@@ -83,15 +83,13 @@ router.delete("/:id", async (req, res) => {
       : db
           .getUserPosts(user_id)
           .then(map(({ id }) => id))
-          .then(
-            ids => Promise.all(ids.map(postsDb.remove)).then(console.log)
-            // .then(_ => db.remove(user_id))
-            // .then(_id => {
-            //   res.status(200).json({
-            //     message: "The user was deleted."
-            //   })
-            // })
-          )
+          .then(ids => Promise.all(ids.map(postDb.remove)))
+          .then(_ => db.remove(user_id))
+          .then(_id => {
+            res.status(200).json({
+              message: "The user was deleted."
+            })
+          })
   } catch (error) {
     console.log(JSON.stringify(error, null, 2))
     res.status(500).json({
