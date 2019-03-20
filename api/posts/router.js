@@ -8,7 +8,7 @@ router.post("/", async (req, res) => {
   const { text, user_id } = req.body
   if (text == null || user_id == null) {
     res.status(400).json({
-      message: "Please provide text for the post."
+      message: "Please provide text and user_id for the post."
     })
   }
   try {

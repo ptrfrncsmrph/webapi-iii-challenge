@@ -5,21 +5,21 @@ const db = require("../../data/helpers/userDb")
 const router = express.Router()
 
 router.post("/", async (req, res) => {
-  // const { title, contents } = req.body
-  // if (title == null || contents == null) {
-  //   res.status(400).json({
-  //     message: "Please provide title and contents for the post."
-  //   })
-  // }
-  // try {
-  //   const { id } = await db.insert({ title, contents })
-  //   res.status(201).json({ title, contents, id })
-  // } catch (error) {
-  //   console.log(error)
-  //   res.status(500).json({
-  //     message: "Error creating the post."
-  //   })
-  // }
+  const { name } = req.body
+  if (name == null) {
+    res.status(400).json({
+      message: "Please provide name for the user."
+    })
+  }
+  try {
+    const { id } = await db.insert({ name })
+    res.status(201).json({ name, id })
+  } catch (error) {
+    console.log(error)
+    res.status(500).json({
+      message: "Error creating the user."
+    })
+  }
 })
 
 router.get("/", async (_req, res) => {
