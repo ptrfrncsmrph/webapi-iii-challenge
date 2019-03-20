@@ -99,23 +99,23 @@ router.delete("/:id", async (req, res) => {
 })
 
 router.put("/:id", async (req, res) => {
-  // const { id } = req.params
-  // const { title, contents } = req.body
-  // try {
-  //   const [user] = await db.getById(id)
-  //   post == null
-  //     ? res.status(404).json({
-  //         message: `There is no post with id ${id}.`
-  //       })
-  //     : db.update(id, { title, contents }).then(() => {
-  //         res.status(200).json({ title, contents, id })
-  //       })
-  // } catch (error) {
-  //   console.log(JSON.stringify(error, null, 2))
-  //   res.status(500).json({
-  //     message: "Could not update the post."
-  //   })
-  // }
+  const { id } = req.params
+  const { name } = req.body
+  try {
+    const user = await db.getById(id)
+    user == null
+      ? res.status(404).json({
+          message: `There is no user with id ${id}.`
+        })
+      : db.update(id, { name }).then(() => {
+          res.status(200).json({ name, id })
+        })
+  } catch (error) {
+    console.log(JSON.stringify(error, null, 2))
+    res.status(500).json({
+      message: "Could not update the user."
+    })
+  }
 })
 
 module.exports = router
