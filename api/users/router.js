@@ -54,7 +54,7 @@ router.get("/:id", async (req, res) => {
 router.delete("/:id", async (req, res) => {
   // const { id } = req.params
   // try {
-  //   const [post] = await db.findById(id)
+  //   const post = await db.findById(id)
   //   post == null
   //     ? res.status(404).json({
   //         message: `There is no post with id ${id}.`

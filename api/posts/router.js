@@ -23,32 +23,32 @@ router.post("/", async (req, res) => {
 })
 
 router.get("/", async (_req, res) => {
-  // try {
-  //   const posts = await db.find()
-  //   res.status(200).json(posts)
-  // } catch (error) {
-  //   console.log(JSON.stringify(error, null, 2))
-  //   res.status(500).json({
-  //     message: "Error finding the posts."
-  //   })
-  // }
+  try {
+    const posts = await db.get()
+    res.status(200).json(posts)
+  } catch (error) {
+    console.log(JSON.stringify(error, null, 2))
+    res.status(500).json({
+      message: "Error finding the posts."
+    })
+  }
 })
 
 router.get("/:id", async (req, res) => {
-  // const { id } = req.params
-  // try {
-  //   const [post] = await db.findById(id)
-  //   post == null
-  //     ? res.status(404).json({
-  //         message: `There is no post with id ${id}.`
-  //       })
-  //     : res.status(200).json(post)
-  // } catch (error) {
-  //   console.log(JSON.stringify(error, null, 2))
-  //   res.status(500).json({
-  //     message: "Error finding the posts."
-  //   })
-  // }
+  const { id } = req.params
+  try {
+    const post = await db.findById(id)
+    post == null
+      ? res.status(404).json({
+          message: `There is no post with id ${id}.`
+        })
+      : res.status(200).json(post)
+  } catch (error) {
+    console.log(JSON.stringify(error, null, 2))
+    res.status(500).json({
+      message: "Error finding the post."
+    })
+  }
 })
 
 router.delete("/:id", async (req, res) => {
