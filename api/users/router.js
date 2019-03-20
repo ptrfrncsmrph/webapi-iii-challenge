@@ -1,6 +1,7 @@
 const express = require("express")
 
 const db = require("../../data/helpers/userDb")
+const postsDb = require("../../data/helpers/postDb")
 
 const router = express.Router()
 
@@ -51,32 +52,59 @@ router.get("/:id", async (req, res) => {
   }
 })
 
+router.get("/posts/:id", async (req, res) => {
+  const { id } = req.params
+  try {
+    const user = await db.getById(id)
+    const posts = await db.getUserPosts(id)
+    user == null
+      ? res.status(404).json({
+          message: `There is no user with id ${id}.`
+        })
+      : res.status(200).json(posts)
+  } catch (error) {
+    console.log(JSON.stringify(error, null, 2))
+    res.status(500).json({
+      message: "Error finding the posts."
+    })
+  }
+})
+
+const map = fn => xs => xs.map(x => fn(x))
+
 router.delete("/:id", async (req, res) => {
-  // const { id } = req.params
-  // try {
-  //   const post = await db.findById(id)
-  //   post == null
-  //     ? res.status(404).json({
-  //         message: `There is no post with id ${id}.`
-  //       })
-  //     : db.remove(id).then(_id => {
-  //         res.status(200).json({
-  //           message: "The post was deleted."
-  //         })
-  //       })
-  // } catch (error) {
-  //   console.log(JSON.stringify(error, null, 2))
-  //   res.status(500).json({
-  //     message: "Error finding the posts."
-  //   })
-  // }
+  const { id: user_id } = req.params
+  try {
+    const user = await db.getById(id)
+    user == null
+      ? res.status(404).json({
+          message: `There is no user with id ${user_id}.`
+        })
+      : db
+          .getUserPosts(user_id)
+          .then(map(({ id }) => id))
+          .then(
+            ids => Promise.all(ids.map(postsDb.remove)).then(console.log)
+            // .then(_ => db.remove(user_id))
+            // .then(_id => {
+            //   res.status(200).json({
+            //     message: "The user was deleted."
+            //   })
+            // })
+          )
+  } catch (error) {
+    console.log(JSON.stringify(error, null, 2))
+    res.status(500).json({
+      message: "Error deleting the user."
+    })
+  }
 })
 
 router.put("/:id", async (req, res) => {
   // const { id } = req.params
   // const { title, contents } = req.body
   // try {
-  //   const [post] = await db.findById(id)
+  //   const [user] = await db.getById(id)
   //   post == null
   //     ? res.status(404).json({
   //         message: `There is no post with id ${id}.`
