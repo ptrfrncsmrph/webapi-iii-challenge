@@ -23,15 +23,15 @@ router.post("/", async (req, res) => {
 })
 
 router.get("/", async (_req, res) => {
-  // try {
-  //   const posts = await db.find()
-  //   res.status(200).json(posts)
-  // } catch (error) {
-  //   console.log(JSON.stringify(error, null, 2))
-  //   res.status(500).json({
-  //     message: "Error finding the posts."
-  //   })
-  // }
+  try {
+    const users = await db.get()
+    res.status(200).json(users)
+  } catch (error) {
+    console.log(JSON.stringify(error, null, 2))
+    res.status(500).json({
+      message: "Error finding the users."
+    })
+  }
 })
 
 router.get("/:id", async (req, res) => {
